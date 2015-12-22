@@ -4,6 +4,7 @@
 The goal of this homebridge plugin is to make it possible to turn a TV and/or Stereo on or off with Siri.
 
 **The hardware topology looks like this:**
+
     iOS Device -> homebridge server -|-> Global Cache 100 IR -> Stereo IR blaster
                                      |-> Global Cache 100 RS232 -> Television serial port
 
