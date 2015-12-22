@@ -1,0 +1,23 @@
+{
+  "name": "homebridge-globalcache-gc100",
+  "version": "1.0.0",
+  "description": "A homebridge plugin for Global Cache GC-100 IR/RS232 bridge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fahrvergnuugen/homebridge-globalcache-gc100.git"
+  },
+  "keywords": [
+    "global",
+    "cache"
+  ],
+  "author": "Paul Wieland <p@ul.sickdimension.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fahrvergnuugen/homebridge-globalcache-gc100/issues"
+  },
+  "homepage": "https://github.com/fahrvergnuugen/homebridge-globalcache-gc100#readme"
+}
