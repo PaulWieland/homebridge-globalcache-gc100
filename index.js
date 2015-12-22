@@ -21,7 +21,6 @@ var command = "sendir,4:2,5,39000,1,1,348,173,21,22,21,65,21,65,21,65,21,22,21,6
 // tv_off = 'POF';
 // $rs232_in = pack("H*" ,'02'.bin2hex($rs232_in).'03');
 
-
 var net = require('net');
 
 var HOST = '10.0.1.155';
