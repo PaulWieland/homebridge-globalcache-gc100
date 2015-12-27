@@ -1,5 +1,13 @@
 # homebridge-globalcache-gc100
-**THIS PLUGIN DOESN'T WORK YET!**
+**THIS PLUGIN IS VERY ALPHA**
+I can sucesfully turn my Panasonic Plasma TV and Marantz Stereo on and off by saying _"Siri turn the Marantz On"_ or _"Siri turn the Panasonic TV On"_
+
+To Do:
+
+  1. Find a way to implement more than just On/Off service so that its possible to control volume, mute and input
+  2. Test more IR devices (e.g. Apple TV)
+  3. Support GC100's DC Triggers
+
 
 The goal of this homebridge plugin is to make it possible to turn a TV and/or Stereo on or off with Siri.
 
@@ -47,6 +55,8 @@ Config file Notes:
   1. `success_message` is the data that the GC100 should send back to this plugin if the command is received and understood by the GC100.
   2. There is an issue specifying control characters such as `\x03` in the homebridge config.json file. I had to implement a workaround where `\x03` is written as `::x03` in the config file and the replaced in the plugin before sending to the GC100. See https://github.com/nfarina/homebridge/issues/441
   3. There is a unique port for each RS232 device, but only one port for all IR devices - that's why the port # is specified separately.
+  4. Siri responds to the "Name" you specify for each device.
+
 
 ```javascript
 "platforms": [
