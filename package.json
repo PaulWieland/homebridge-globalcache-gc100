@@ -11,7 +11,7 @@
     "url": "git+https://github.com/fahrvergnuugen/homebridge-globalcache-gc100.git"
   },
   "keywords": [
-    "homebridge",
+    "homebridge-plugin",
     "global cache",
     "globalcache",
     "gc100"
@@ -20,6 +20,13 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/fahrvergnuugen/homebridge-globalcache-gc100/issues"
+  },
+  "engines": {
+    "node": ">=0.12.0",
+    "homebridge": ">=0.2.0"
+  },
+  "dependencies": {
+    "net": ">=1.0"
   },
   "homepage": "https://github.com/fahrvergnuugen/homebridge-globalcache-gc100#readme"
 }

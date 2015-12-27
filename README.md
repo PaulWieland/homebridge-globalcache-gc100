@@ -42,6 +42,12 @@ In order to achieve this goal, I need to create a new platform for homebridge (h
 
 _Add this to .homebridge/config.json:_
 
+Config file Notes:
+
+  1. `success_message` is the data that the GC100 should send back to this plugin if the command is received and understood by the GC100.
+  2. There is an issue specifying control characters such as `\x03` in the homebridge config.json file. I had to implement a workaround where `\x03` is written as `::x03` in the config file and the replaced in the plugin before sending to the GC100. See https://github.com/nfarina/homebridge/issues/441
+  3. There is a unique port for each RS232 device, but only one port for all IR devices - that's why the port # is specified separately.
+
 ```javascript
 "platforms": [
 	{
@@ -49,23 +55,31 @@ _Add this to .homebridge/config.json:_
 		"name": "gc100",
 		"host": "10.0.1.155",
 		"ir_port": "4998",
-		"rs232_port": "4999",
 
 		"ir_devices": [
 			{ "name": "Marantz Stereo",
-				"commands": [
+				"commands": {
 					{"on": "sendir,4:1,1,37000,4,1,32,32,32,32,32,32,64,32,32,32,32,32,32,161,32,32,32,64,32,32,64,32,32,32,32,32,32,32,32,32,32,32,32,64,32,2731,32,32,32,32,32,32,64,32,32,32,32,32,32,161,32,32,32,64,32,32,64,32,32,32,32,32,32,32,32,32,32,32,32,64,32,1200"},
 					{"off": "sendir,4:1,2,37000,4,1,32,32,32,32,32,32,64,32,32,32,32,32,32,161,32,32,32,64,32,32,64,32,32,32,32,32,32,32,32,32,32,64,64,2731,32,32,32,32,32,32,64,32,32,32,32,32,32,161,32,32,32,64,32,32,64,32,32,32,32,32,32,32,32,32,32,64,64,1200"}
-				]
+				},
+				"success_messages" : {
+					"on": "completeir,4:1,1",
+					"off": "completeir,4:1,2"
+				}
 			}
 		],
 
 		"rs232_devices": [
-			{ "name": "Panasonic TV",
-				"commands": [
-					{"on" : "PON"},
-					{"off" : "POF"}
-				]
+			{"name": "Panasonic TV",
+			"port": "4999",
+				"commands": {
+					"on" : "::x02PON::x03",
+					"off" : "::x02POF::x03"
+				},
+				"success_messages" : {
+					"on" : "::x02PON::x03",
+					"off" : "::x02POF::x03"
+				}
 			}
 		]
 	}
