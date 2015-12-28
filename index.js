@@ -39,7 +39,7 @@ GC100Platform.prototype.accessories = function(callback){
 	}
 
 	if(results.length == 0){
-		this.log("WARNING: No GC100 Acessories were loaded.");
+		this.log("WARNING: No Accessories were loaded.");
 	}
 
 	callback(results);
@@ -177,10 +177,10 @@ GC100Accessory.prototype.executeIRCommand = function(command, success_message, c
 		// log the response from the GC100
 		this.log('DATA: ' + data);
 		if(data.toString().trim() == success_message){
-			this.log("GC100 IR Command Accepted");
+			this.log("IR Command Accepted");
 			callback(null);// success
 		}else{
-			this.log("GC100 IR Command Failed: "+data+(data.toString().trim() == success_message));
+			this.log("IR Command Failed: "+data+(data.toString().trim() == success_message));
 			callback(new Error("Error setting state."));
 		}
 		// Close the connection
@@ -209,10 +209,10 @@ GC100Accessory.prototype.executeRS232Command = function(command, success_message
 		// log the response from the GC100
 		this.log('DATA: ' + data);
 		if(data.toString().trim() == success_message){
-			this.log("GC100 RS232 Command Accepted");
+			this.log("RS232 Command Accepted");
 			callback(null);// success
 		}else{
-			this.log("GC100 RS232 Command Failed: "+data+(data.toString().trim() == success_message));
+			this.log("RS232 Command Failed: "+data+(data.toString().trim() == success_message));
 			console.log(command == data.toString());
 			// console.log()
 			// callback(new Error("Error setting state."));
