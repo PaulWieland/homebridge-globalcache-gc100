@@ -45,57 +45,6 @@ GC100Platform.prototype.accessories = function(callback){
 	callback(results);
 }
 
-// GC100Platform.prototype.executeIRCommand = function(command,callback){
-// 	var client = new net.Socket();
-// 	client.platform = this;
-// 
-// 	client.connect(this.ir_port, this.host, function(){
-// 		this.platform.log('CONNECTED TO: ' + this.platform.host + ':' + this.platform.ir_port);
-// 			// Send the IR command to the GC100
-// 			client.write(command+"\r");
-// 	}).on('data', function(data) {
-// 		// log the response from the GC100
-// 		this.platform.log('DATA: ' + data);
-// 		if(data.toString() == 'completeir'){
-// 			this.platform.log("GC100 IR Command Accepted");
-// 			callback(null);// success
-// 		}else{
-// 			this.platform.log("GC100 IR Command Failed: "+data);
-// 			callback(new Error("Error setting state."));
-// 		}
-// 		// Close the connection
-// 		client.destroy();
-// 	});
-// }
-// 
-// GC100Platform.prototype.executeRS232Command = function(port, command, success_message, callback){
-// 	var client = new net.Socket();
-// 	client.platform = this;
-// 
-// 	/* With my setup GC100->Panasonic Plasma TV I have to send the command in binary. 
-// 	Unfortunatly I don't have another RS232 device handy to test */
-// 	command = new Buffer(command, 'binary');
-// 
-// 	client.connect(port,this.host, function() {
-// 		this.platform.log('CONNECTED TO: ' + this.platform.host + ':' + this.platform.ir_port);
-// 	  // Replace `PON_MSG` with `POF_MSG` to do POF instead
-// 	  client.write(command);
-// 	}).on('data', function(data) {
-// 		// log the response from the GC100
-// 		this.platform.log('DATA: ' + data);
-// 
-// 		if(data.toString() == success_message){
-// 			this.platform.log("GC100 RS232 Command Accepted");
-// 			callback(null);// success
-// 		}else{
-// 			this.platform.log("GC100 RS232 Command Failed: "+data);
-// 			callback(new Error("Error setting state."));
-// 		}
-// 		// Close the connection
-// 		client.destroy();
-// 	});
-// }
-
 /* Global Cache Accessories
    IR
    RS232
@@ -116,6 +65,8 @@ function GC100Accessory(type, dconfig, platform, port){
 
 	this.commands = dconfig.commands;
 	this.success_messages = dconfig.success_messages; // When a command is sent to the GC100, it will respond with something. If that something matches what's in the corresponding success_messages object, then the command was sucessful
+	
+	if(dconfig.hasOwnProperty('base64_encoded') && dconfig.base64_encoded) this.base64Decode();
 
 	// If both commands for on & off are defined in the device config, implement the switch service
 	if(this.commands.on && this.commands.off){
@@ -180,7 +131,7 @@ GC100Accessory.prototype.executeIRCommand = function(command, success_message, c
 			this.log("IR Command Accepted");
 			callback(null);// success
 		}else{
-			this.log("IR Command Failed: "+data+(data.toString().trim() == success_message));
+			this.log("IR Command Failed: "+data);
 			callback(new Error("Error setting state."));
 		}
 		// Close the connection
@@ -190,16 +141,9 @@ GC100Accessory.prototype.executeIRCommand = function(command, success_message, c
 
 /* RS232 Command Execution */
 GC100Accessory.prototype.executeRS232Command = function(command, success_message, callback){
-	// this.platform.log(command +'::'+ success_message +'::'+ callback);
-	// callback();
-	// return;
 	sock = new net.Socket(); // A socket to communicate to the GC100 with
 	sock.log = this.platform.log; // Make it possible to use the platform log from the net.Socket instance
 
-	// This replace nonesense is needed because of
-	// https://github.com/nfarina/homebridge/issues/441
-	success_message = success_message.replace("::x02","\x02").replace("::x03","\x03");
-	command = command.replace("::x02","\x02").replace("::x03","\x03");
 	command = new Buffer(command,'binary');
 
 	sock.connect(this.port, this.platform.host, function(){
@@ -212,10 +156,8 @@ GC100Accessory.prototype.executeRS232Command = function(command, success_message
 			this.log("RS232 Command Accepted");
 			callback(null);// success
 		}else{
-			this.log("RS232 Command Failed: "+data+(data.toString().trim() == success_message));
-			console.log(command == data.toString());
-			// console.log()
-			// callback(new Error("Error setting state."));
+			this.log("RS232 Command Failed: "+data);
+			callback(new Error("Error setting state."));
 		}
 		// Close the connection
 		this.destroy();
@@ -223,19 +165,29 @@ GC100Accessory.prototype.executeRS232Command = function(command, success_message
 }
 
 
-// var net = require('net');
-// var PON_MSG = new Buffer('\x02PON\x03', 'binary');
-// var POF_MSG = new Buffer('\x02POF\x03', 'binary');
-// 
-// var client = new net.Socket();
-// client.connect('4999','10.0.1.155', function() {
-//   console.log('CONNECTED');
-//   // Replace `PON_MSG` with `POF_MSG` to do POF instead
-//   client.write(PON_MSG);
-// }).on('data', function(data) {
-//   console.log('DATA: %j', data);
-// 	// Close the connection
-// 	client.destroy();
-// });
+/*
+ This method is a workaround for:
+ https://github.com/nfarina/homebridge/issues/441
+ Any devices specified in config.json that have base64_encoded = true
+ will be decoded with this method.
 
-
+ Use base64_encoder.js to create encoded commands
+*/
+GC100Accessory.prototype.base64Decode = function(){
+	if(typeof this.commands === 'object'){
+		var decoded = {};
+		for(var i in this.commands){
+			decoded[i] = new Buffer(this.commands[i], 'base64').toString('ascii');
+			console.log("DECODED: "+this.commands[i]);
+		}
+		this.commands = decoded;
+	}
+	
+	if(typeof this.success_messages === 'object'){
+		var decoded = {};
+		for(var i in this.success_messages){
+			decoded[i] = new Buffer(this.success_messages[i], 'base64').toString('ascii');
+		}
+		this.success_messages = decoded;
+	}
+}

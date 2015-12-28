@@ -53,7 +53,7 @@ _Add this to .homebridge/config.json:_
 Config file Notes:
 
   1. `success_message` is the data that the GC100 should send back to this plugin if the command is received and understood by the GC100.
-  2. There is an issue specifying control characters such as `\x03` in the homebridge config.json file. I had to implement a workaround where `\x03` is written as `::x03` in the config file and the replaced in the plugin before sending to the GC100. See https://github.com/nfarina/homebridge/issues/441
+  2. There is an issue specifying control characters such as `\x03` in the homebridge config.json file. I had to implement a workaround by base64 encoding the commands. See `base64_encoder.js` and https://github.com/nfarina/homebridge/issues/441
   3. There is a unique port for each RS232 device, but only one port for all IR devices - that's why the port # is specified separately.
   4. Siri responds to the "Name" you specify for each device.
 
@@ -82,13 +82,14 @@ Config file Notes:
 		"rs232_devices": [
 			{"name": "Panasonic TV",
 			"port": "4999",
+			"base64_encoded": true,
 				"commands": {
-					"on" : "::x02PON::x03",
-					"off" : "::x02POF::x03"
+					"on" : "AlBPTgM=",
+					"off" : "AlBPRgM="
 				},
 				"success_messages" : {
-					"on" : "::x02PON::x03",
-					"off" : "::x02POF::x03"
+					"on" : "AlBPTgM=",
+					"off" : "AlBPRgM="
 				}
 			}
 		]
