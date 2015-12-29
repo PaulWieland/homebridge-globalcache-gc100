@@ -100,4 +100,4 @@ _Add this to .homebridge/config.json:_
 
 **Contact me on slack!**
 
-I'm a member of homebridgeteam.slack.com / chanel #plugins
+I'm a member of https://homebridgeteam.slack.com/messages/plugins/team/
