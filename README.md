@@ -50,13 +50,6 @@ In order to achieve this goal, I need to create a new platform for homebridge (h
 
 _Add this to .homebridge/config.json:_
 
-Config file Notes:
-
-  1. `success_message` is the data that the GC100 should send back to this plugin if the command is received and understood by the GC100.
-  2. There is an issue specifying control characters such as `\x03` in the homebridge config.json file. I had to implement a workaround by base64 encoding the commands. See `base64_encoder.js` and https://github.com/nfarina/homebridge/issues/441
-  3. There is a unique port for each RS232 device, but only one port for all IR devices - that's why the port # is specified separately.
-  4. Siri responds to the "Name" you specify for each device.
-
 
 ```javascript
 "platforms": [
@@ -96,3 +89,15 @@ Config file Notes:
 	}
 ]
 ```
+
+**Config file Notes:**
+
+  1. `success_message` is the data that the GC100 should send back to this plugin if the command is received and understood by the GC100.
+  2. There is an issue specifying control characters such as `\x02` or `\x03` (STX or ETX) in the homebridge `config.json` file. I had to implement a workaround by base64 encoding the RS232 commands. See `base64_encoder.js` and https://github.com/nfarina/homebridge/issues/441
+  3. There is a unique port for each RS232 device, but only one port for all IR devices - that's why the port # is specified separately.
+  4. Siri responds to the "Name" you specify for each device.
+
+
+**Contact me on slack!**
+
+I'm a member of homebridgeteam.slack.com / chanel #plugins
