@@ -63,10 +63,11 @@ function GC100Accessory(type, dconfig, platform, port){
 	
 	this.services = []; // will hold the services this acessory supports
 
-	this.commands = dconfig.commands;
-	this.success_messages = dconfig.success_messages; // When a command is sent to the GC100, it will respond with something. If that something matches what's in the corresponding success_messages object, then the command was sucessful
+	this.commands = dconfig.commands || {};
+	this.success_messages = dconfig.success_messages || {}; // When a command is sent to the GC100, it will respond with something. If that something matches what's in the corresponding success_messages object, then the command was sucessful
 	
-	if(dconfig.hasOwnProperty('base64_encoded') && dconfig.base64_encoded) this.base64Decode();
+	// If the commands & success_messages are base64 encoded, decode them
+	if(dconfig.base64_encoded) this.base64Decode();
 
 	// If both commands for on & off are defined in the device config, implement the switch service
 	if(this.commands.on && this.commands.off){
@@ -112,7 +113,7 @@ GC100Accessory.prototype.setState = function(state, callback) {
  real IR remote)
 */
 GC100Accessory.prototype.getState = function(callback){
-	callback(null, "Unknown");
+	// callback(null, "Unknown");
 	this.platform.log("IR Device state is `Unknown`");
 }
 
@@ -174,20 +175,15 @@ GC100Accessory.prototype.executeRS232Command = function(command, success_message
  Use base64_encoder.js to create encoded commands
 */
 GC100Accessory.prototype.base64Decode = function(){
-	if(typeof this.commands === 'object'){
-		var decoded = {};
-		for(var i in this.commands){
-			decoded[i] = new Buffer(this.commands[i], 'base64').toString('ascii');
-			console.log("DECODED: "+this.commands[i]);
-		}
-		this.commands = decoded;
+	var decoded = {};
+	for(var i in this.commands){
+		decoded[i] = new Buffer(this.commands[i], 'base64').toString('ascii');
 	}
+	this.commands = decoded;
 	
-	if(typeof this.success_messages === 'object'){
-		var decoded = {};
-		for(var i in this.success_messages){
-			decoded[i] = new Buffer(this.success_messages[i], 'base64').toString('ascii');
-		}
-		this.success_messages = decoded;
+	var decoded = {};
+	for(var i in this.success_messages){
+		decoded[i] = new Buffer(this.success_messages[i], 'base64').toString('ascii');
 	}
+	this.success_messages = decoded;
 }
