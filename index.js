@@ -81,7 +81,6 @@ function GC100Accessory(type, dconfig, platform, port){
 		
 		switchService
 			.getCharacteristic(Characteristic.On)
-			.on('get', this.getState.bind(this))
 			.on('set', this.setState.bind(this))
 
 		this.services.push(switchService);
@@ -113,7 +112,7 @@ GC100Accessory.prototype.setState = function(state, callback) {
  real IR remote)
 */
 GC100Accessory.prototype.getState = function(callback){
-	// callback(null, "Unknown");
+	callback(null, "Unknown");
 	this.platform.log("IR Device state is `Unknown`");
 }
 
