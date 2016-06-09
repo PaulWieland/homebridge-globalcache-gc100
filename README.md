@@ -1,5 +1,5 @@
 # homebridge-globalcache-gc100
-**THIS HOMEBRIDGE PLUGIN IS VERY ALPHA**
+**THIS HOMEBRIDGE PLUGIN IS VERY BETA**
 
 I can sucesfully turn my Panasonic Plasma TV and Marantz Stereo on and off by saying _"Siri turn the Marantz On"_ or _"Siri turn the Panasonic TV On"_. This plugin assumes you already have the IR codes or serial commands for your devices that are downstream of your GC100. I would suggest only attempting to use this plugin if you can _already_ control your devices with your GC100!
 

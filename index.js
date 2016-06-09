@@ -77,7 +77,7 @@ function GC100Accessory(type, dconfig, platform, port){
 		// Wire the get & set
 		switchService
 			.getCharacteristic(Characteristic.On)
-			.on('get', this.getState.bind(this));
+			// .on('get', this.getState.bind(this));
 		
 		switchService
 			.getCharacteristic(Characteristic.On)
@@ -111,10 +111,10 @@ GC100Accessory.prototype.setState = function(state, callback) {
  command was (which could be out of sync if someone controls the IR device with a
  real IR remote)
 */
-GC100Accessory.prototype.getState = function(callback){
+/*GC100Accessory.prototype.getState = function(callback){
 	callback(null, "Unknown");
 	this.platform.log("IR Device state is `Unknown`");
-}
+}*/
 
 GC100Accessory.prototype.executeIRCommand = function(command, success_message, callback){
 	sock = new net.Socket(); // A socket to communicate to the GC100 with
